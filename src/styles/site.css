@@ -329,6 +329,10 @@ figure {
 
 figure img {
   width: 100%;
+  /* The intrinsic width/height attributes are there so the browser reserves the
+     right box before the image loads. `height: auto` is what stops it treating
+     that height as the used height and squashing the picture. */
+  height: auto;
   border: 1px solid var(--panel-edge);
   border-radius: 6px;
   display: block;

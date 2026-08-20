@@ -89,10 +89,12 @@ hostnames reachable from one build is the whole reason to consolidate here.
   to `~/embabel-me` whatever mode you ask for, so a Worlds install lands somewhere
   called Me. The page works around it by not naming the directory. The fix belongs
   in `install.sh`.
-- **No screenshot on the landing page.** The console shot that would carry it is
-  `2026/gwc-overview/assets/embabel-worlds-console.png` in the *private*
-  presentations repo, and this site only pulls from public ones. It needs a home
-  in a public repo before it can be pulled.
+- **The console screenshot has no upstream.** `public/images/worlds-console.webp`
+  is committed here rather than pulled, because nothing public owns it: it came
+  from `2026/gwc-overview/assets/embabel-worlds-console.png` in the *private*
+  presentations repo. That means it is the one thing on the site that can go
+  stale without anyone noticing. Re-shoot it from Query Studio when the console
+  changes shape, and re-encode with `cwebp -q 82`.
 - **The cheat sheet's palette** is the spec repo's own — teal on paper, not indigo
   on black. Fixing that means changing it upstream, which is the right place and
   a separate change.
