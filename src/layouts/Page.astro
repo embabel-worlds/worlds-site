@@ -1,0 +1,91 @@
+---
+/*
+ * The chrome every page wears.
+ *
+ * The whole visual language arrives as one import from the kit — the same
+ * package the Me app and the Worlds console build against — so the site is the
+ * product's surface by dependency rather than by resemblance. site.css holds
+ * only what is genuinely a marketing page's and has no business in an app:
+ * a hero, a feature grid, a nav bar.
+ */
+import '@embabel/appliance-kit/css/index.css'
+import '../styles/site.css'
+import Backdrop from '../components/Backdrop.astro'
+
+interface Props {
+  title: string
+  description: string
+  /* Prose measure for the spec pages; the marketing pages run wider. */
+  narrow?: boolean
+}
+const { title, description, narrow = false } = Astro.props
+const path = Astro.url.pathname
+
+/* This site is Embabel Worlds and nothing else. Me gets its own landing and its
+   own install when it is ready; until then, mentioning it here would sell two
+   products to a visitor who came for one. The wordmark is the way home, so the
+   nav carries only the places to go next. */
+const NAV = [
+  { href: '/spec/', label: 'Realm spec' },
+  { href: '/cheatsheet.html', label: 'Virtual Cypher cheat sheet' },
+]
+
+/* The fragments that drift through the backdrop are real virtual-Cypher, taken
+   from the guide this site publishes. Lorem would make the graph decoration. */
+const SNIPPETS = [
+  "MATCH (p:Person)-[:HAS_HUBSPOT_CONTACT]->(c:HubSpotContact)",
+  "install realm-github",
+  "MATCH (d:Document) WHERE d ~ 'renewal terms'",
+  "producer: contactsByEmail(['ada@example.com'])",
+  'materialize (:GitHubIssue:Virtual) · rollback',
+  "realm.yml → actions/ types/ views/ handlers/",
+  'MCP server ready · 12 tools',
+  "MATCH (t:ClinicalTrial)-[:STUDIES]->(c:Condition)",
+  'nothing mirrored · nothing stale',
+]
+---
+
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>{title}</title>
+    <meta name="description" content={description} />
+    <link rel="canonical" href={new URL(path, Astro.site)} />
+    <meta property="og:title" content={title} />
+    <meta property="og:description" content={description} />
+    <meta property="og:type" content="website" />
+  </head>
+
+  <body>
+    <!-- Quieter than either app. The console is a control room where the graph is
+         most of what an empty screen shows; this page is long-form prose sitting
+         right on top of it, and the backdrop must not compete with the words. -->
+    <Backdrop snippets={SNIPPETS} brightness={0.4} />
+
+    <div class="wrap">
+      <header class="top">
+        <a class="wordmark" href="/">Embabel<span> Worlds</span></a>
+        <nav>
+          {NAV.map((item) => (
+            <a href={item.href} aria-current={path === item.href ? 'page' : undefined}>{item.label}</a>
+          ))}
+          <a href="https://github.com/embabel-worlds/appliance">GitHub</a>
+        </nav>
+      </header>
+
+      <main class={narrow ? 'narrow' : undefined}>
+        <slot />
+      </main>
+
+      <footer>
+        <a href="https://github.com/embabel-worlds/appliance">The appliance</a> ·
+        <a href="https://github.com/embabel-worlds/realm-spec">The realm spec</a> ·
+        <a href="https://github.com/embabel-worlds/appliance/blob/main/install.sh">The install script</a> ·
+        <a href="https://github.com/embabel-worlds/appliance/blob/main/PHONE_HOME.md">What is reported</a>
+        <p>Apache-2.0. It runs on your machine, against your model provider’s key.</p>
+      </footer>
+    </div>
+  </body>
+</html>

@@ -1,0 +1,12 @@
+{
+  "projects": {
+    "default": "embabel-me-prod"
+  },
+  "targets": {
+    "embabel-me-prod": {
+      "hosting": {
+        "worlds": ["embabel-worlds-prod"]
+      }
+    }
+  }
+}

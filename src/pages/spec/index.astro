@@ -1,0 +1,40 @@
+---
+/*
+ * The way in to the spec. The repo ships a flat directory of markdown with no
+ * opinion about reading order; this page is that opinion, and the only thing
+ * this site adds to the spec.
+ */
+import Page from '../../layouts/Page.astro'
+import { SPEC_DOCS } from '../../spec-docs'
+import { SPEC_REPO } from '../../site'
+---
+
+<Page
+  title="The Embabel realm specification"
+  description="What a realm is, what it may contain, and how a host wires it in — plus the Virtual Cypher guide and reference.">
+
+  <div class="hero">
+    <h1>The realm <em>specification</em></h1>
+    <p class="lede">
+      A realm is a git repository of declarative capability — actions, types, APIs, MCP
+      servers, scheduled work — that an Embabel host reads and wires into a running agent.
+      This is the spec, published from
+      <a href={SPEC_REPO}>the repository that owns it</a>.
+    </p>
+  </div>
+
+  <section style="border-top: none; padding-top: 0">
+    <div class="doc-index">
+      {SPEC_DOCS.map((doc) => (
+        <a href={`/spec/${doc.slug}/`}>
+          <strong>{doc.title}</strong>
+          <span>{doc.blurb}</span>
+        </a>
+      ))}
+      <a href="/cheatsheet.html">
+        <strong>Virtual Cypher — cheat sheet</strong>
+        <span>The whole language on one printable page. Served exactly as the spec repo publishes it.</span>
+      </a>
+    </div>
+  </section>
+</Page>

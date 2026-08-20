@@ -1,0 +1,255 @@
+---
+/*
+ * The landing page.
+ *
+ * The claim is the pitch deck's, near enough word for word — "Embabel builds the
+ * World enterprise AI acts in; a governed, living knowledge graph of the
+ * business, derived from the systems they already run, owned by the customer, in
+ * days". The site and the deck saying different things about what the product is
+ * would be worse than either one being wrong.
+ *
+ * Marketing, not documentation. Anything that wants a paragraph of detail is
+ * behind a link. The temptation is to explain the system; the job is to make
+ * someone want it.
+ */
+import Page from '../layouts/Page.astro'
+import Install from '../components/Install.astro'
+---
+
+<Page
+  title="Embabel Worlds — the world your AI acts in"
+  description="A governed, living knowledge graph of your business, derived from the systems you already run and owned by you. Insight across the whole business, in days.">
+
+  <div class="hero">
+    <h1>The <em>world</em> your AI acts in.</h1>
+
+    <p class="lede">
+      Enterprise AI stalls on integration, not on model quality — and no model is coming
+      to fix that. None will ever ship knowing your entities, your systems or your
+      permissions, and a bag of MCP tools only leaves it improvising every join. The piece
+      nobody has built is the world itself: typed, governed, queryable, and yours.
+    </p>
+    <p class="lede">
+      Embabel Worlds builds it, from the systems you already run. It stands up in
+      <strong>days</strong>, it belongs to you, it runs on your own machine — and you can
+      install it today.
+    </p>
+
+    <div class="cta">
+      <a class="btn" href="#install">Stand one up — one command</a>
+      <a class="btn ghost" href="#ask">See what you can ask it</a>
+    </div>
+
+    <Install />
+
+    <p class="cta-note">
+      No account, no waitlist, no sales call. Docker and your own model provider key —
+      it runs on your machine and nothing routes through us.
+      <br />
+      <span class="source">On integration as the cause rather than model quality: MIT Project NANDA, <em>State of AI in Business</em> (2025).</span>
+    </p>
+  </div>
+
+  <section id="does">
+    <h2>Answers, watches, acts</h2>
+    <p>
+      Three things, from the first afternoon — not after a quarter of integration work. It
+      links what you already own, any source and any format, into one continuously updated
+      graph with per-user access control.
+    </p>
+
+    <div class="features">
+      <div class="feature">
+        <h3>It answers</h3>
+        <p>
+          Any question, across any system, for anyone — including your agents. The joins
+          your dashboards cannot make, because no single system holds both halves. With
+          sources, so an answer can be checked rather than believed.
+        </p>
+      </div>
+      <div class="feature">
+        <h3>It watches</h3>
+        <p>
+          Any change, anywhere, surfaced the moment it happens. A standing question beats
+          a dashboard nobody remembers to open — the drift, the recall, the clause that
+          moved, arriving before it costs you.
+        </p>
+      </div>
+      <div class="feature">
+        <h3>It acts</h3>
+        <p>
+          Multi-step work run end to end, with approval gates exactly where you want them.
+          The answer stops being a report somebody has to action.
+        </p>
+      </div>
+    </div>
+
+    <div id="ask" style="margin-top: 44px">
+      <h3 class="ask-head">The shape of question that has no home today</h3>
+      <p style="color: var(--mid); max-width: 64ch">
+        Each of these needs two systems that have never been joined. Today somebody
+        exports a spreadsheet and does it by hand, monthly. Here it is one question, and
+        you can leave it running.
+      </p>
+      <ul class="asks">
+        <li>Which customers renew inside 30 days <em>and</em> have an open support ticket?</li>
+        <li>Which signed contracts have a liability clause that drifted from the template?</li>
+        <li>Which parts in this recall are still in inventory, and who bought them?</li>
+        <li>Which of last quarter’s deals stalled at the same step, and what did they have in common?</li>
+      </ul>
+    </div>
+
+    <ul class="facts">
+      <li>
+        <strong>The first afternoon:</strong> point it at a folder and one system you
+        already run, and ask something that spans them. PDFs, decks and spreadsheets go in
+        as they are — there is no ingestion project.
+      </li>
+      <li>
+        <strong>Day two:</strong> the questions worth asking twice become saved views. The
+        ones worth asking continuously become alerts that reach you when the answer
+        changes.
+      </li>
+      <li>
+        <strong>Day three:</strong> it is already an MCP server, so the tools your team
+        uses get the whole world instead of another single-system connector.
+      </li>
+    </ul>
+  </section>
+
+  <section id="why">
+    <h2>Model, harness, world</h2>
+    <p>
+      Two of the three have had all the money. Models are converging and rentable. The
+      harness around them is commoditizing fast. The third — the environment the AI acts
+      in, typed and governed and <em>yours</em> — is the one nobody has built, and the one
+      where the value accumulates.
+    </p>
+
+    <div class="features">
+      <div class="feature">
+        <h3>The model</h3>
+        <p>
+          Fungible intelligence, converging in a narrow band. However good it gets, no
+          model will ever ship knowing your entities, your systems or your permissions.
+        </p>
+      </div>
+      <div class="feature">
+        <h3>The harness</h3>
+        <p>
+          Context management, subagents, recovery loops. Real machinery, and increasingly
+          a commodity — everyone has one.
+        </p>
+      </div>
+      <div class="feature">
+        <h3>The world</h3>
+        <p>
+          What the agent acts in: typed, governed, queryable, and owned by you. A bag of
+          MCP tools is not this — it leaves the model improvising every join.
+        </p>
+      </div>
+    </div>
+
+    <p style="margin-top: 30px; color: var(--mid); max-width: 64ch">
+      AI coding worked because code came with a world already: compilers, tests, a
+      sandbox to be wrong in. Your business does not have one. Embabel builds it from
+      what you already own.
+    </p>
+  </section>
+
+  <section id="cypher">
+    <h2>One question, across systems that were never joined</h2>
+    <p>
+      Your graph holds what you own. The rest — a CRM contact, a support ticket, a
+      valuation, a public record — lives in someone else’s system.
+      <strong>Virtual Cypher</strong> lets a query traverse into it as though it were
+      already there: the engine fetches the far side on demand, materializes it for the
+      life of the query, and rolls it back. Nothing is mirrored, so nothing goes stale,
+      and no answer is older than the question.
+    </p>
+
+    <div class="cmd" style="margin-top: 26px">
+      <code>MATCH (p:Person &#123;name:'Ada Lovelace'&#125;)-[:HAS_HUBSPOT_CONTACT]-&gt;(c:HubSpotContact) RETURN c.company</code>
+    </div>
+
+    <div class="cta">
+      <a class="btn ghost" href="/spec/virtual-cypher-guide/">Learn it by example</a>
+      <a class="btn ghost" href="/cheatsheet.html">The one-page cheat sheet</a>
+    </div>
+  </section>
+
+  <section id="realms">
+    <h2>A capability is a repository</h2>
+    <p>
+      You extend a world by installing a <strong>realm</strong>: a folder of declarative
+      YAML in git. Drop one in and the runtime wires up what it declares — types, actions,
+      goals, APIs, MCP servers, scheduled work, saved queries, whole dashboards. Nothing
+      to compile, and nothing you cannot read before you trust it.
+    </p>
+
+    <div class="features">
+      <div class="feature">
+        <h3>Declarative</h3>
+        <p>
+          YAML, plus TypeScript handlers where real logic is needed. No JVM bytecode and
+          no native binaries — a realm is auditable by reading it.
+        </p>
+      </div>
+      <div class="feature">
+        <h3>Composable</h3>
+        <p>
+          Install several. They share one graph, and the spec says exactly what happens
+          when two realms describe the same entity.
+        </p>
+      </div>
+      <div class="feature">
+        <h3>Yours</h3>
+        <p>
+          Fork one, fix it, point the runtime at your copy. Realms resolve from any GitHub
+          org or user you configure — starting with your own.
+        </p>
+      </div>
+    </div>
+  </section>
+
+  <section id="install">
+    <h2>Stand one up</h2>
+    <p>
+      One command. It checks Docker, unpacks the runtime, walks you through your account
+      and your model provider key, and ends by opening the console at
+      <code>localhost:4343</code>. It installs nothing globally, needs no root, and binds
+      everything to your loopback interface rather than the network.
+    </p>
+
+    <Install />
+
+    <ul class="facts" style="margin-top: 26px">
+      <li><strong>Then:</strong> drop a folder of documents on the console. It converts and indexes them as they are.</li>
+      <li><strong>Then:</strong> install a realm — <code>realm-github</code>, <code>realm-hubspot</code>, <code>realm-stripe</code> — and it can reach that system live, without mirroring it.</li>
+      <li><strong>Then:</strong> ask the first question that needs both. That is the one that has never had an answer.</li>
+    </ul>
+
+    <p style="margin-top:16px; color: var(--mid)">
+      Piping a script into a shell is a thing you should be suspicious of — so
+      <a href="/install.sh">read it first</a>. It is deliberately short, and it is the
+      same file <a href="https://github.com/embabel-worlds/appliance/blob/main/install.sh">the
+      public repository serves</a>.
+    </p>
+
+    <table class="req">
+      <tr><th>What you need</th><th>Why, and what it costs</th></tr>
+      <tr>
+        <td>Docker Desktop</td>
+        <td>The runtime is containers. Free, and a sizeable first download. Model Runner must be enabled — embeddings run locally, on your hardware.</td>
+      </tr>
+      <tr>
+        <td>A model provider key</td>
+        <td>Your own key, from Anthropic or OpenAI. You pay them directly for what you use; nothing routes through Embabel.</td>
+      </tr>
+      <tr>
+        <td>Disk and memory</td>
+        <td>Several gigabytes for images and the graph. It is a real system running on your own machine, and it is honest about that.</td>
+      </tr>
+    </table>
+  </section>
+</Page>

@@ -1,0 +1,34 @@
+---
+/*
+ * The product's living graph, behind the marketing page too. The animation is
+ * the kit's — one copy, drawn the same way behind the console, the Me app and
+ * here — so the site cannot drift from the thing it is selling.
+ *
+ * Snippets come in as an attribute rather than through `define:vars`, which
+ * would force the script inline and take its imports away with it.
+ */
+interface Props {
+  snippets: string[]
+  brightness?: number
+}
+const { snippets, brightness = 0.8 } = Astro.props
+---
+
+<canvas
+  class="embabel-backdrop"
+  data-backdrop
+  data-snippets={JSON.stringify(snippets)}
+  data-brightness={String(brightness)}
+  aria-hidden="true"></canvas>
+
+<script>
+  import { startBackdrop } from '@embabel/appliance-kit/backdrop'
+
+  const canvas = document.querySelector<HTMLCanvasElement>('canvas[data-backdrop]')
+  if (canvas) {
+    startBackdrop(canvas, {
+      snippets: JSON.parse(canvas.dataset.snippets ?? '[]'),
+      brightness: Number(canvas.dataset.brightness ?? 1),
+    })
+  }
+</script>

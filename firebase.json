@@ -1,0 +1,16 @@
+{
+  "hosting": [
+    {
+      "target": "worlds",
+      "public": "dist",
+      "cleanUrls": true,
+      "ignore": ["firebase.json", "**/.*", "**/node_modules/**"],
+      "headers": [
+        {
+          "source": "/install.sh",
+          "headers": [{ "key": "Content-Type", "value": "text/plain; charset=utf-8" }]
+        }
+      ]
+    }
+  ]
+}

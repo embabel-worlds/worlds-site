@@ -1,0 +1,15 @@
+{
+  "name": "worlds-site",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "pull": "node scripts/pull.mjs",
+    "dev": "npm run pull && astro dev",
+    "build": "npm run pull && astro build",
+    "preview": "astro preview"
+  },
+  "dependencies": {
+    "@embabel/appliance-kit": "git+https://github.com/embabel-worlds/appliance-kit.git#main",
+    "astro": "^5.13.0"
+  }
+}

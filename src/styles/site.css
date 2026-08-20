@@ -1,0 +1,445 @@
+/*
+ * What a marketing page needs and an app does not.
+ *
+ * The ground, the palette, the type scale, links, code and rendered markdown all
+ * come from `@embabel/appliance-kit/css` — imported by the layout, ahead of this
+ * file. NOTHING here restates a colour: every value below resolves through the
+ * kit's tokens, so a theme change over there moves this site with it. That is the
+ * whole reason the site takes a dependency on the product's stylesheet instead of
+ * looking like it.
+ *
+ * What is left is layout for shapes the console has no use for: a hero, a nav
+ * bar, a feature grid, a copyable command, a document page with a sidebar.
+ */
+
+/* ── The column ──────────────────────────────────────────────────────────── */
+
+.wrap {
+  max-width: 1040px;
+  margin: 0 auto;
+  padding: 0 clamp(18px, 4vw, 28px);
+}
+
+main.narrow {
+  max-width: 74ch;
+}
+
+/* ── Masthead ────────────────────────────────────────────────────────────── */
+
+header.top {
+  display: flex;
+  align-items: baseline;
+  gap: 24px;
+  flex-wrap: wrap;
+  padding: 24px 0 0;
+}
+
+.wordmark {
+  font-family: var(--mono);
+  font-size: 13px;
+  letter-spacing: .18em;
+  text-transform: uppercase;
+  color: var(--ink);
+  text-decoration: none;
+}
+
+/* The product is "Embabel"; this site is the Worlds door. The second word is
+   quieter so the brand reads first. */
+.wordmark span {
+  color: var(--faint);
+}
+
+header.top nav {
+  display: flex;
+  gap: 18px;
+  flex-wrap: wrap;
+  margin-left: auto;
+  font-size: 14px;
+}
+
+header.top nav a {
+  color: var(--mid);
+  text-decoration: none;
+}
+
+header.top nav a:hover {
+  color: var(--ink);
+}
+
+/* The page you are on, marked rather than merely coloured — colour alone is not
+   an affordance for everyone. */
+header.top nav a[aria-current='page'] {
+  color: var(--ink);
+  box-shadow: inset 0 -1px 0 var(--signal);
+}
+
+/* ── Hero ────────────────────────────────────────────────────────────────── */
+
+.hero {
+  padding: clamp(48px, 9vw, 96px) 0 clamp(32px, 5vw, 56px);
+}
+
+.source {
+  display: inline-block;
+  margin-top: 8px;
+  font-size: 12.5px;
+  color: var(--faint);
+}
+
+.hero h1 {
+  font-size: clamp(38px, 7vw, 68px);
+  line-height: 1.05;
+  font-weight: 780;
+  letter-spacing: -.03em;
+  max-width: 17ch;
+}
+
+/* The one flourish on the page, and it lands on the word that carries the claim.
+   Flat colour, not a gradient: clipped to a single short word a gradient fades
+   out mid-word and reads as a rendering fault rather than as emphasis. */
+.hero h1 em {
+  font-style: normal;
+  color: var(--signal-ink);
+}
+
+.lede {
+  font-size: clamp(17px, 2.2vw, 21px);
+  line-height: 1.55;
+  color: var(--mid);
+  max-width: 60ch;
+  margin-top: 20px;
+}
+
+/* A second lede paragraph is the turn from the problem to the fix; it wants the
+   same measure and less air than the first. */
+.lede + .lede {
+  margin-top: 14px;
+}
+
+.lede strong {
+  color: var(--ink);
+  font-weight: 600;
+}
+
+.cta {
+  display: flex;
+  gap: 14px;
+  align-items: center;
+  flex-wrap: wrap;
+  margin-top: 34px;
+}
+
+.btn {
+  font: inherit;
+  font-size: 15px;
+  font-weight: 600;
+  padding: 12px 22px;
+  border-radius: var(--radius-panel);
+  border: 1px solid var(--signal);
+  background: var(--signal);
+  color: var(--on-signal);
+  text-decoration: none;
+  display: inline-block;
+  transition: box-shadow .15s, transform .15s;
+}
+
+.btn:hover {
+  box-shadow: var(--signal-glow);
+  transform: translateY(-1px);
+}
+
+.btn.ghost {
+  background: var(--signal-wash);
+  color: var(--signal-ink);
+}
+
+/* ── The command ─────────────────────────────────────────────────────────── */
+
+.cmd {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-top: 18px;
+  padding: 13px 16px;
+  border: 1px solid var(--rule);
+  border-radius: var(--radius-panel);
+  background: rgb(0 0 0 / .55);
+  font-family: var(--mono);
+  font-size: 13.5px;
+  color: var(--signal-ink);
+  overflow-x: auto;
+}
+
+.cmd code {
+  white-space: nowrap;
+  background: none;
+  padding: 0;
+}
+
+.cmd button {
+  margin-left: auto;
+  font-family: var(--mono);
+  font-size: 11px;
+  letter-spacing: .1em;
+  text-transform: uppercase;
+  padding: 5px 10px;
+  border: 1px solid var(--rule);
+  background: transparent;
+  color: var(--mid);
+  cursor: pointer;
+  flex: none;
+}
+
+.cmd button:hover {
+  color: var(--ink);
+  border-color: var(--mid);
+}
+
+/* ── Sections and the feature grid ───────────────────────────────────────── */
+
+section {
+  padding: clamp(40px, 6vw, 72px) 0;
+  border-top: 1px solid var(--hairline);
+}
+
+section > h2 {
+  font-size: clamp(24px, 3.4vw, 34px);
+  font-weight: 700;
+  letter-spacing: -.02em;
+  /* base.css makes `.panel > h2` a mono caption; a marketing section heading is
+     a heading, so it says so here. */
+  text-transform: none;
+  font-family: var(--sans);
+  letter-spacing: -.02em;
+}
+
+section > h2 + p {
+  color: var(--mid);
+  margin-top: 12px;
+  max-width: 64ch;
+}
+
+.features {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+  gap: 16px;
+  margin-top: 30px;
+}
+
+.feature {
+  background: var(--panel-bg);
+  border: 1px solid var(--panel-edge);
+  border-radius: var(--radius-panel);
+  padding: 20px;
+  backdrop-filter: blur(2px);
+}
+
+.feature h3 {
+  font-family: var(--mono);
+  font-size: 11.5px;
+  text-transform: uppercase;
+  letter-spacing: .14em;
+  color: var(--signal-ink);
+  font-weight: 500;
+}
+
+.feature p {
+  color: var(--mid);
+  font-size: 14.5px;
+  margin-top: 10px;
+}
+
+/* The line under the buttons that answers "what is this going to cost me". */
+.cta-note {
+  margin-top: 16px;
+  color: var(--faint);
+  font-size: 14px;
+  max-width: 58ch;
+}
+
+/* Real questions, set as questions: the reader should recognise one as theirs
+   before they read another word of explanation. */
+.ask-head {
+  font-size: 19px;
+  font-weight: 650;
+  letter-spacing: -.01em;
+  margin-bottom: 10px;
+}
+
+ul.asks {
+  list-style: none;
+  padding: 0;
+  margin-top: 20px;
+  display: grid;
+  gap: 10px;
+}
+
+ul.asks li {
+  padding: 14px 18px;
+  border: 1px solid var(--panel-edge);
+  border-left: 2px solid var(--signal);
+  border-radius: var(--radius-panel);
+  background: var(--panel-bg);
+  color: var(--ink);
+  font-size: 15.5px;
+}
+
+ul.asks em {
+  font-style: normal;
+  color: var(--signal-label);
+  font-weight: 600;
+}
+
+/* Claims with a lamp beside them, for the list where each line is checkable. */
+ul.facts {
+  list-style: none;
+  padding: 0;
+  margin-top: 26px;
+  display: grid;
+  gap: 14px;
+}
+
+ul.facts li {
+  padding-left: 26px;
+  position: relative;
+  color: var(--mid);
+  max-width: 72ch;
+}
+
+ul.facts li::before {
+  content: "";
+  position: absolute;
+  left: 0;
+  top: 9px;
+  width: 9px;
+  height: 9px;
+  border-radius: 50%;
+  background: var(--lit);
+  box-shadow: 0 0 8px color-mix(in srgb, var(--lit) 55%, transparent);
+}
+
+ul.facts strong {
+  color: var(--ink);
+  font-weight: 600;
+}
+
+figure {
+  margin: 34px 0 0;
+}
+
+figure img {
+  width: 100%;
+  border: 1px solid var(--panel-edge);
+  border-radius: 6px;
+  display: block;
+}
+
+figcaption {
+  color: var(--faint);
+  font-size: 13px;
+  margin-top: 10px;
+}
+
+table.req {
+  width: 100%;
+  border-collapse: collapse;
+  margin-top: 26px;
+  font-size: 14.5px;
+}
+
+table.req th,
+table.req td {
+  text-align: left;
+  padding: 11px 12px;
+  border-bottom: 1px solid var(--hairline);
+  vertical-align: top;
+}
+
+table.req th {
+  font-family: var(--mono);
+  font-size: 11px;
+  text-transform: uppercase;
+  letter-spacing: .12em;
+  color: var(--faint);
+  font-weight: 500;
+}
+
+table.req td:first-child {
+  color: var(--ink);
+  white-space: nowrap;
+}
+
+table.req td:last-child {
+  color: var(--mid);
+}
+
+/* ── Document pages ──────────────────────────────────────────────────────── */
+
+.doc-index {
+  display: grid;
+  gap: 2px;
+  margin-top: 32px;
+}
+
+.doc-index a {
+  display: block;
+  padding: 18px 20px;
+  border: 1px solid var(--panel-edge);
+  border-radius: var(--radius-panel);
+  background: var(--panel-bg);
+  text-decoration: none;
+}
+
+.doc-index a:hover {
+  border-color: var(--signal-edge);
+}
+
+.doc-index strong {
+  color: var(--ink);
+  font-weight: 600;
+  display: block;
+}
+
+.doc-index span {
+  color: var(--mid);
+  font-size: 14.5px;
+  display: block;
+  margin-top: 6px;
+}
+
+/* The spec is long. A reader who arrived from a search result needs to know
+   where they landed and how to leave. */
+.doc-head {
+  padding: 32px 0 8px;
+  border-bottom: 1px solid var(--hairline);
+}
+
+.doc-head .meta a {
+  color: var(--mid);
+}
+
+.doc-source {
+  margin-top: 48px;
+  padding-top: 18px;
+  border-top: 1px solid var(--hairline);
+  color: var(--faint);
+  font-size: 13px;
+}
+
+/* ── Footer ──────────────────────────────────────────────────────────────── */
+
+footer {
+  padding: 44px 0 70px;
+  margin-top: 40px;
+  color: var(--faint);
+  font-size: 13px;
+  border-top: 1px solid var(--hairline);
+}
+
+footer a {
+  color: var(--mid);
+}
+
+footer p {
+  margin-top: 10px;
+}

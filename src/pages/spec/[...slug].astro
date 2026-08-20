@@ -1,0 +1,44 @@
+---
+/*
+ * Every spec document, in the site's chrome.
+ *
+ * The prose is not edited here — it is rendered from the checkout scripts/pull.mjs
+ * makes, with only its links repointed (see plugins/rewrite-doc-links.mjs). A
+ * reader who wants the source is one click away, and told so at the foot of the
+ * page: a spec people cannot get the canonical copy of is a spec they cannot
+ * trust this rendering of.
+ */
+import { getCollection, render } from 'astro:content'
+import Page from '../../layouts/Page.astro'
+import { SPEC_DOCS } from '../../spec-docs'
+import { SPEC_REPO } from '../../site'
+
+export async function getStaticPaths() {
+  const docs = await getCollection('spec')
+  return docs.map((doc) => ({ params: { slug: doc.id }, props: { doc } }))
+}
+
+const { doc } = Astro.props
+const { Content } = await render(doc)
+
+const listed = SPEC_DOCS.find((d) => d.slug === doc.id)
+const title = listed?.title ?? doc.id
+/* The filename this came from, so the "source" link at the foot is exact. */
+const sourceFile = doc.filePath?.split('/').pop() ?? ''
+---
+
+<Page title={`${title} — Embabel`} description={listed?.blurb ?? 'The Embabel realm specification.'} narrow>
+  <div class="doc-head">
+    <p class="meta"><a href="/spec/">← The realm specification</a></p>
+  </div>
+
+  <article class="md">
+    <Content />
+  </article>
+
+  <p class="doc-source">
+    This document is published from
+    <a href={`${SPEC_REPO}/blob/main/${sourceFile}`}>{sourceFile}</a>
+    in the realm-spec repository, which is where it is written and where corrections go.
+  </p>
+</Page>

@@ -1,0 +1,45 @@
+# Build the site and publish it to Firebase Hosting.
+#
+# Firebase rather than GitHub Pages for one reason that matters: the project
+# already serves me.embabel.com, and Pages allows a single custom domain per
+# repository. Keeping both hostnames reachable from one build is the whole point
+# of consolidating the marketing surfaces here, and Pages forecloses it.
+#
+# The build pulls the realm spec and install.sh from their own repos first — see
+# scripts/pull.mjs. Both are public, so no token is needed to read them.
+name: Deploy
+
+on:
+  push:
+    branches: [main]
+  # The site quotes documents this repo does not own. A daily build republishes
+  # them without anyone remembering to.
+  schedule:
+    - cron: '0 6 * * *'
+  workflow_dispatch:
+
+concurrency:
+  group: deploy
+  cancel-in-progress: true
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: lts/*
+          cache: npm
+
+      - run: npm ci
+      - run: npm run build
+
+      - uses: FirebaseExtended/action-hosting-deploy@v0
+        with:
+          repoToken: ${{ secrets.GITHUB_TOKEN }}
+          firebaseServiceAccount: ${{ secrets.FIREBASE_SERVICE_ACCOUNT }}
+          projectId: embabel-me-prod
+          target: worlds
+          channelId: live
