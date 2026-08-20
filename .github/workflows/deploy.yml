@@ -36,7 +36,24 @@ jobs:
       - run: npm ci
       - run: npm run build
 
+      # Until the Firebase site, the secret and the DNS record exist, say so and
+      # stop. A red build on every push would train everyone to ignore this
+      # workflow, and the build above is the half worth watching in the meantime:
+      # it proves the site still builds from the spec repo as that repo changes.
+      - name: Check for deploy credentials
+        id: creds
+        env:
+          ACCOUNT: ${{ secrets.FIREBASE_SERVICE_ACCOUNT }}
+        run: |
+          if [ -z "$ACCOUNT" ]; then
+            echo "configured=false" >> "$GITHUB_OUTPUT"
+            echo "::notice::Built, not deployed — FIREBASE_SERVICE_ACCOUNT is not set. See README, 'Before the first deploy'."
+          else
+            echo "configured=true" >> "$GITHUB_OUTPUT"
+          fi
+
       - uses: FirebaseExtended/action-hosting-deploy@v0
+        if: steps.creds.outputs.configured == 'true'
         with:
           repoToken: ${{ secrets.GITHUB_TOKEN }}
           firebaseServiceAccount: ${{ secrets.FIREBASE_SERVICE_ACCOUNT }}
