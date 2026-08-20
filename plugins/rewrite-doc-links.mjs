@@ -12,6 +12,9 @@
  */
 
 const REPO_BLOB = 'https://github.com/embabel-worlds/realm-spec/blob/main/'
+/* CLI.md comes from the appliance, and its relative links point at appliance files. */
+const APPLIANCE_BLOB = 'https://github.com/embabel-worlds/appliance/blob/main/'
+const APPLIANCE_FILES = new Set(['.env.example', 'install.sh', 'README.md'])
 
 /* Must agree with `generateId` in src/content.config.ts — the same two rules. */
 const slugFor = (file) => {
@@ -34,6 +37,8 @@ function rewrite(href) {
 
   if (PUBLISHED.has(path)) return `/spec/${slugFor(path)}/${fragment}`
   if (path === 'VIRTUAL_CYPHER_CHEATSHEET.html') return `/cheatsheet.html${fragment}`
+
+  if (APPLIANCE_FILES.has(path)) return `${APPLIANCE_BLOB}${path}${fragment}`
 
   /* Everything else is a file in the spec repo that this site does not publish —
      a realm.yml, an example directory. Send the reader to the source. */

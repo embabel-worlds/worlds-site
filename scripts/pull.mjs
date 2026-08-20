@@ -82,4 +82,10 @@ cpSync(join(spec, 'VIRTUAL_CYPHER_CHEATSHEET.html'), join(ROOT, 'public/cheatshe
    moving main. */
 cpSync(join(appliance, 'install.sh'), join(ROOT, 'public/install.sh'))
 
+/* The CLI reference, from the repo that owns the CLI. Same rule as the spec: it
+   is rendered here, never edited here, so `embabel --help` and this page cannot
+   describe different commands. */
+mkdirSync(join(ROOT, 'vendor/appliance-docs'), { recursive: true })
+cpSync(join(appliance, 'CLI.md'), join(ROOT, 'vendor/appliance-docs/cli.md'))
+
 console.log('  done\n')

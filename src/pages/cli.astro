@@ -1,0 +1,34 @@
+---
+/*
+ * The `embabel` CLI reference, rendered from the appliance repo's CLI.md.
+ *
+ * Not written here, for the same reason the spec is not: `embabel --help` and this
+ * page describing different commands is the exact failure a docs site invites, and
+ * the only defence is one source. The repo-relative links in it are repointed on
+ * the way through, like the spec's.
+ */
+import { getEntry, render } from 'astro:content'
+import Page from '../layouts/Page.astro'
+import { REPO } from '../site'
+
+const doc = await getEntry('appliance', 'cli')
+const { Content } = await render(doc)
+---
+
+<Page
+  title="The embabel command — Embabel Worlds"
+  description="Reference for the embabel CLI: up, status, doctor, logs, realms, upgrade, down, uninstall."
+  narrow>
+  <div class="doc-head">
+    <p class="meta"><a href="/">← Embabel Worlds</a></p>
+  </div>
+
+  <article class="md">
+    <Content />
+  </article>
+
+  <p class="doc-source">
+    Published from <a href={`${REPO}/blob/main/CLI.md`}>CLI.md</a> in the appliance
+    repository, which is where it is written and where corrections go.
+  </p>
+</Page>

@@ -19,4 +19,17 @@ const spec = defineCollection({
   }),
 })
 
-export const collections = { spec }
+/*
+ * The appliance's own documentation — today the CLI reference. Separate from the
+ * spec because it comes from a different repository with a different release
+ * cadence, and folding them into one collection would make that invisible.
+ */
+const appliance = defineCollection({
+  loader: glob({
+    pattern: '*.md',
+    base: './vendor/appliance-docs',
+    generateId: ({ entry }) => entry.replace(/\.md$/, ''),
+  }),
+})
+
+export const collections = { spec, appliance }
