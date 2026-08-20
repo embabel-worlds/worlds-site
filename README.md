@@ -40,8 +40,11 @@ Two consequences worth knowing:
 - **The cheat sheet is served verbatim** at `/cheatsheet.html`. It is already a
   finished, printable page; re-rendering it would mean maintaining its layout
   twice, and the copy people print should be the copy the spec repo tests. It
-  wears its own palette rather than the site's, which is a deliberate loose end —
-  see below.
+  carries the product's palette now — the same `--sb-*` values the kit's stylesheet
+  defines, inlined, because that page has no build step and nothing to resolve a
+  package against. It used to wear a teal of its own, which this file called a
+  deliberate loose end; it was tied off in realm-spec rather than papered over
+  here, so the printed copy and the published one are the same document.
 
 To edit a doc and the site together, point a source at a working copy:
 
