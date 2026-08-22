@@ -1,0 +1,49 @@
+---
+/*
+ * Every guide chapter, in the site's chrome. Rendered from the checkout pull.mjs
+ * makes, never edited here — the same rule the spec and the CLI reference follow,
+ * for the same reason: two copies of a document are two documents.
+ */
+import { getCollection, render } from 'astro:content'
+import Page from '../../layouts/Page.astro'
+import { GUIDE_DOCS } from '../../guide-docs'
+import { REPO } from '../../site'
+
+export async function getStaticPaths() {
+  const docs = await getCollection('guide')
+  return docs.map((doc) => ({ params: { slug: doc.id }, props: { doc } }))
+}
+
+const { doc } = Astro.props
+const { Content } = await render(doc)
+
+const listed = GUIDE_DOCS.find((d) => d.slug === doc.id)
+const title = listed?.title ?? doc.id
+const sourceFile = doc.filePath?.split('/').pop() ?? ''
+
+/* Where this chapter sits, so a reader who finishes one is offered the next rather
+   than being returned to an index to work it out themselves. */
+const index = GUIDE_DOCS.findIndex((d) => d.slug === doc.id)
+const next = index >= 0 ? GUIDE_DOCS[index + 1] : undefined
+---
+
+<Page title={`${title} — Embabel Worlds`} description={listed?.blurb ?? 'Using Embabel Worlds.'} narrow>
+  <div class="doc-head">
+    <p class="meta"><a href="/guide/">← The guide</a></p>
+  </div>
+
+  <article class="md">
+    <Content />
+  </article>
+
+  {next && (
+    <p class="doc-next">
+      Next: <a href={`/guide/${next.slug}/`}>{next.title}</a> — {next.blurb}
+    </p>
+  )}
+
+  <p class="doc-source">
+    Published from <a href={`${REPO}/blob/main/docs/guide/${sourceFile}`}>docs/guide/{sourceFile}</a>
+    in the appliance repository, which is where it is written and where corrections go.
+  </p>
+</Page>

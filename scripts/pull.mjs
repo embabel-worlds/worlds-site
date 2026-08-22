@@ -15,7 +15,7 @@
  *   SOURCE_REALM_SPEC=../realm-spec npm run dev
  */
 import { execFileSync } from 'node:child_process'
-import { cpSync, mkdirSync, rmSync, existsSync } from 'node:fs'
+import { cpSync, mkdirSync, readdirSync, rmSync, existsSync } from 'node:fs'
 import { fileURLToPath } from 'node:url'
 import { dirname, join, resolve } from 'node:path'
 
@@ -92,6 +92,24 @@ cpSync(join(appliance, 'install.sh'), join(ROOT, 'public/install.sh'))
    describe different commands. */
 mkdirSync(join(ROOT, 'vendor/appliance-docs'), { recursive: true })
 cpSync(join(appliance, 'CLI.md'), join(ROOT, 'vendor/appliance-docs/cli.md'))
+
+/* The user guide, rendered by /guide/. Written in the appliance repo because that
+   is the public repository the product ships from, and read by people who will also
+   meet it there — so it has to work as plain markdown on GitHub, not only in this
+   site's chrome. */
+rmSync(join(ROOT, 'vendor/guide-docs'), { recursive: true, force: true })
+mkdirSync(join(ROOT, 'vendor/guide-docs'), { recursive: true })
+/* Tolerated the way the API document is, and for the same reason: this site and the
+   appliance are separate repositories that land at separate times, so an absent guide
+   must not take down every other page while one of them catches up. */
+const guideDir = join(appliance, 'docs/guide')
+if (existsSync(guideDir)) {
+  const chapters = readdirSync(guideDir).filter((n) => n.endsWith('.md'))
+  for (const f of chapters) cpSync(join(guideDir, f), join(ROOT, 'vendor/guide-docs', f))
+  console.log(`  guide     ← appliance docs/guide (${chapters.length} chapters)`)
+} else {
+  console.warn('  guide     !! the appliance has no docs/guide — /guide/ will be empty.')
+}
 
 /*
  * The Worlds API, rendered by /api/. Into public/ rather than vendor/ because Redoc

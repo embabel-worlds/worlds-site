@@ -28,6 +28,24 @@ const PUBLISHED = new Set([
   'LABELS_AND_COMPOSITION.md', 'EXTERNAL_DOCUMENTS.md', 'CONTEXT.md',
 ])
 
+/*
+ * The guide, from the appliance repo. Its chapters link to each other the way a
+ * reader on GitHub needs them to — `[privacy](privacy.md)` — and without this they
+ * would fall through to the realm-spec catch-all below and point at a file in a
+ * repository that has never held them.
+ *
+ * README.md is deliberately absent: it is the guide's front page, but the same
+ * filename means the spec's front page too, and this plugin cannot tell which
+ * document it is rewriting. The guide's own chapters therefore link to `/guide/`
+ * directly rather than to `README.md`.
+ */
+const GUIDE_FILES = new Map([
+  ['coding-agents.md', 'coding-agents'],
+  ['realms.md', 'realms'],
+  ['local-models.md', 'local-models'],
+  ['privacy.md', 'privacy'],
+])
+
 function rewrite(href) {
   /* Absolute, anchor-only, and already-ours links are left alone. */
   if (!href || /^(https?:|mailto:|#|\/)/.test(href)) return href
@@ -35,6 +53,7 @@ function rewrite(href) {
   const [path, hash = ''] = href.split('#')
   const fragment = hash ? `#${hash}` : ''
 
+  if (GUIDE_FILES.has(path)) return `/guide/${GUIDE_FILES.get(path)}/${fragment}`
   if (PUBLISHED.has(path)) return `/spec/${slugFor(path)}/${fragment}`
   if (path === 'VIRTUAL_CYPHER_CHEATSHEET.html') return `/cheatsheet.html${fragment}`
 

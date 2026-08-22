@@ -1,0 +1,34 @@
+---
+/*
+ * The way in to the guide. The appliance ships a flat directory of markdown; the
+ * reading order is this site's editorial layer, exactly as it is for the spec.
+ */
+import Page from '../../layouts/Page.astro'
+import { GUIDE_DOCS } from '../../guide-docs'
+import { REPO } from '../../site'
+---
+
+<Page
+  title="Guide — Embabel Worlds"
+  description="Using Embabel Worlds: working with a coding agent, building your own realms, running your own models, and what stays on your machine.">
+
+  <div class="hero">
+    <h1>The <em>guide</em></h1>
+    <p class="lede">
+      For people using Embabel Worlds rather than building it. It assumes you can follow
+      a terminal command when one is given, and nothing beyond that. Published from
+      <a href={REPO}>the appliance repository</a>, where it is written.
+    </p>
+  </div>
+
+  <section style="border-top: none; padding-top: 0">
+    <div class="doc-index">
+      {GUIDE_DOCS.map((doc) => (
+        <a href={`/guide/${doc.slug}/`}>
+          <strong>{doc.title}</strong>
+          <span>{doc.blurb}</span>
+        </a>
+      ))}
+    </div>
+  </section>
+</Page>

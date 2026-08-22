@@ -32,4 +32,23 @@ const appliance = defineCollection({
   }),
 })
 
-export const collections = { spec, appliance }
+/*
+ * The user guide, from the appliance repo. Its own collection rather than a folder
+ * inside `appliance` above, because it is a different KIND of document — prose for
+ * someone using the product, not a reference for someone operating it — and the
+ * site gives it its own index and its own place in the nav.
+ */
+const guide = defineCollection({
+  loader: glob({
+    pattern: '*.md',
+    base: './vendor/guide-docs',
+    /* README is the guide's own front page, so it gets the name a reader would
+       guess rather than one that only makes sense to a filesystem. */
+    generateId: ({ entry }) => {
+      const stem = entry.replace(/\.md$/, '')
+      return stem === 'README' ? 'overview' : stem
+    },
+  }),
+})
+
+export const collections = { spec, appliance, guide }
