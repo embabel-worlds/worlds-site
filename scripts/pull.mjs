@@ -27,6 +27,10 @@ const ROOT = resolve(dirname(fileURLToPath(import.meta.url)), '..')
 const SOURCES = {
   'realm-spec': { repo: 'https://github.com/embabel-worlds/realm-spec.git', ref: 'main' },
   'appliance': { repo: 'https://github.com/embabel-worlds/appliance.git', ref: 'main' },
+  /* The API document. It is PRODUCED in embabel/me, which is private, and pushed
+     here by that repo's publish-openapi job — so the kit is the public face of a
+     document this site could not otherwise read. See README-openapi.md there. */
+  'appliance-kit': { repo: 'https://github.com/embabel-worlds/appliance-kit.git', ref: 'main' },
 }
 
 const git = (args, cwd) => execFileSync('git', args, { cwd, stdio: ['ignore', 'pipe', 'inherit'] }).toString().trim()
@@ -59,6 +63,7 @@ function fetchSource(name) {
 console.log('\nPulling published documents:')
 const spec = fetchSource('realm-spec')
 const appliance = fetchSource('appliance')
+const kit = fetchSource('appliance-kit')
 
 /* The spec's markdown is rendered into the site's own chrome by
    src/pages/spec/[...slug].astro, so it only has to land where the content
@@ -87,5 +92,30 @@ cpSync(join(appliance, 'install.sh'), join(ROOT, 'public/install.sh'))
    describe different commands. */
 mkdirSync(join(ROOT, 'vendor/appliance-docs'), { recursive: true })
 cpSync(join(appliance, 'CLI.md'), join(ROOT, 'vendor/appliance-docs/cli.md'))
+
+/*
+ * The Worlds API, rendered by /api/. Into public/ rather than vendor/ because Redoc
+ * FETCHES it at runtime — it needs a URL, not a module.
+ *
+ * ABSENCE IS TOLERATED, LOUDLY. Until embabel/me holds the App credentials its
+ * publish job skips, and this file does not exist. Failing the build over that would
+ * take the whole site down over one page; saying nothing would let the reference
+ * silently never appear. So: warn here, and let /api/ say plainly that it has not
+ * been published yet.
+ */
+const openapi = join(kit, 'spec/worlds-openapi.json')
+if (existsSync(openapi)) {
+  cpSync(openapi, join(ROOT, 'public/openapi.json'))
+  const meta = join(kit, 'spec/worlds-openapi.meta.json')
+  /* Provenance, so the page can date itself. Written by the publish job beside the
+     document; the document itself stays exactly what the server served. */
+  if (existsSync(meta)) cpSync(meta, join(ROOT, 'public/openapi.meta.json'))
+  else rmSync(join(ROOT, 'public/openapi.meta.json'), { force: true })
+  console.log(`  openapi   ← appliance-kit spec/worlds-openapi.json`)
+} else {
+  rmSync(join(ROOT, 'public/openapi.json'), { force: true })
+  rmSync(join(ROOT, 'public/openapi.meta.json'), { force: true })
+  console.warn('  openapi   !! appliance-kit has no spec/worlds-openapi.json — /api/ will say so.')
+}
 
 console.log('  done\n')

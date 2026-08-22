@@ -11,5 +11,8 @@
   "dependencies": {
     "@embabel/appliance-kit": "git+https://github.com/embabel-worlds/appliance-kit.git#main",
     "astro": "^5.13.0"
+  },
+  "devDependencies": {
+    "redoc": "^2.5.3"
   }
 }

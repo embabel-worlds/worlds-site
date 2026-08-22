@@ -16,6 +16,12 @@ on:
   # them without anyone remembering to.
   schedule:
     - cron: '0 6 * * *'
+  # The API reference is the one document that must not wait for 6am — the Worlds API
+  # is under active change, and a reference a day behind it is a reference people stop
+  # trusting. embabel/me's publish-openapi job fires this when, and only when, the
+  # document it pushes to appliance-kit actually differs.
+  repository_dispatch:
+    types: [openapi-updated]
   workflow_dispatch:
 
 concurrency:

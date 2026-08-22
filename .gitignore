@@ -11,4 +11,6 @@ dist/
 vendor/
 public/install.sh
 public/cheatsheet.html
+public/openapi.json
+public/openapi.meta.json
 .DS_Store

@@ -1,0 +1,119 @@
+---
+/*
+ * The Worlds API reference.
+ *
+ * Not written here and not generated here: the document is `/v3/api-docs` from a
+ * running appliance, captured by OpenApiClientContractTest in embabel/me while it
+ * has a server up, and pushed to appliance-kit by that repo's publish-openapi job.
+ * scripts/pull.mjs copies it to public/openapi.json. Same rule as the CLI page and
+ * the realm spec — one source, and this site is never it.
+ *
+ * Redoc rather than a renderer of our own. 300-odd operations with request and
+ * response schemas is a solved problem, and the solution is not worth writing twice;
+ * the standalone bundle is one self-contained file, so it is imported like any other
+ * asset rather than pulled from a CDN at the reader's expense.
+ */
+import { existsSync, readFileSync } from 'node:fs'
+import { fileURLToPath } from 'node:url'
+import redocUrl from 'redoc/bundles/redoc.standalone.js?url'
+import Page from '../layouts/Page.astro'
+
+const publicDir = fileURLToPath(new URL('../../public/', import.meta.url))
+const published = existsSync(`${publicDir}openapi.json`)
+
+/* Provenance the publish job wrote beside the document. A reference page that cannot
+   say how old it is asks the reader to take freshness on faith, and this one updates
+   from a private repository they cannot check. */
+let meta: { generatedAt?: string; commit?: string; run?: string } = {}
+if (published && existsSync(`${publicDir}openapi.meta.json`)) {
+  meta = JSON.parse(readFileSync(`${publicDir}openapi.meta.json`, 'utf8'))
+}
+const generated = meta.generatedAt
+  ? new Date(meta.generatedAt).toLocaleDateString('en-GB', { day: 'numeric', month: 'long', year: 'numeric' })
+  : null
+
+/* Path count, so the page states its own size rather than leaving the reader to scroll
+   for it. Read at build; the document is on disk already. */
+const operations = published
+  ? Object.keys(JSON.parse(readFileSync(`${publicDir}openapi.json`, 'utf8')).paths ?? {}).length
+  : 0
+---
+
+<Page
+  title="API reference — Embabel Worlds"
+  description="The Embabel Worlds HTTP API: every endpoint, request and response schema, generated from the running appliance.">
+  <div class="doc-head">
+    <p class="meta"><a href="/">← Embabel Worlds</a></p>
+    <h1>API reference</h1>
+    {published ? (
+      <p>
+        {operations} paths, generated from a running appliance{generated ? ` on ${generated}` : ''}.
+        Every endpoint is behind HTTP Basic against your own instance.
+      </p>
+    ) : (
+      <p>
+        Not published yet. The document is produced by the appliance's own build; until that
+        build holds the credential to publish it, this page has nothing to render.
+      </p>
+    )}
+  </div>
+
+  {published && <div id="redoc" class="redoc-host"></div>}
+
+  <p class="doc-source">
+    Generated from <code>/v3/api-docs</code> on a running appliance and republished on every
+    green build — never hand-written. The raw document is
+    <a href="/openapi.json">openapi.json</a>, and it is the same one a generated client is
+    built from.
+  </p>
+</Page>
+
+{published && (
+  <>
+    <script is:inline src={redocUrl}></script>
+    <script is:inline>
+      /*
+       * Redoc's own theme is light, and this site is not. Rather than restate a palette,
+       * read the tokens the kit already defines on this page and hand them over — so the
+       * reference follows the product's colours instead of resembling them.
+       */
+      const token = (name) =>
+        getComputedStyle(document.documentElement).getPropertyValue(name).trim()
+
+      Redoc.init(
+        '/openapi.json',
+        {
+          /* The success shape is the one people came for; making it a click is how a
+             reference feels slow even when it is fast. */
+          expandResponses: '200',
+          theme: {
+            colors: {
+              primary: { main: token('--signal') },
+              text: { primary: token('--ink'), secondary: token('--mid') },
+              http: { get: token('--lit'), post: token('--signal'), delete: token('--alert') },
+            },
+            typography: {
+              fontFamily: token('--sans'),
+              headings: { fontFamily: token('--sans') },
+              code: { fontFamily: token('--mono'), backgroundColor: token('--card') },
+            },
+            sidebar: { backgroundColor: token('--card'), textColor: token('--ink') },
+            rightPanel: { backgroundColor: token('--card'), textColor: token('--ink') },
+            schema: { nestedBackground: token('--card') },
+          },
+        },
+        document.getElementById('redoc'),
+      )
+    </script>
+  </>
+)}
+
+<style>
+  /* Redoc lays itself out full-bleed with its own sidebar, so it gets the width the
+     marketing pages give a hero rather than the measure a prose page gives a paragraph. */
+  .redoc-host {
+    margin: 28px 0 0;
+    border-top: 1px solid var(--rule);
+    background: var(--paper);
+  }
+</style>
