@@ -84,8 +84,17 @@ cpSync(join(spec, 'VIRTUAL_CYPHER_CHEATSHEET.html'), join(ROOT, 'public/cheatshe
 
 /* Serving the installer here is what makes the curl line short — and pins new
    users to whatever ref SOURCES names above, rather than to the appliance's
-   moving main. */
+   moving main. Both installers ship from the appliance for the same reason:
+   whichever OS a visitor arrives on, they get the version pinned above. */
 cpSync(join(appliance, 'install.sh'), join(ROOT, 'public/install.sh'))
+/* The Windows counterpart. Absence is tolerated (no warn) until it lands in
+   the appliance, so a Unix-only rollout keeps deploying. */
+const winInstaller = join(appliance, 'install.ps1')
+if (existsSync(winInstaller)) {
+  cpSync(winInstaller, join(ROOT, 'public/install.ps1'))
+} else {
+  rmSync(join(ROOT, 'public/install.ps1'), { force: true })
+}
 
 /* The CLI reference, from the repo that owns the CLI. Same rule as the spec: it
    is rendered here, never edited here, so `embabel --help` and this page cannot
