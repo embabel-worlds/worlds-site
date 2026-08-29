@@ -14,3 +14,9 @@ public/cheatsheet.html
 public/openapi.json
 public/openapi.meta.json
 .DS_Store
+
+.firebase/
+firebase-debug.log
+public/install.ps1
+public/install.sh
+vendor/
