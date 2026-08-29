@@ -7,6 +7,11 @@
 #
 # The build pulls the realm spec and install.sh from their own repos first — see
 # scripts/pull.mjs. Both are public, so no token is needed to read them.
+#
+# Auth is Workload Identity Federation (no stored keys). The two GCP-side inputs
+# live as repo variables — see README, "Before the first deploy" — because
+# neither is secret: the WIF provider name is a public GCP resource path, and
+# the SA email is only useful to a caller GCP already trusts.
 name: Deploy
 
 on:
@@ -31,6 +36,9 @@ concurrency:
 jobs:
   deploy:
     runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      id-token: write   # Required for GitHub → GCP OIDC token exchange.
     steps:
       - uses: actions/checkout@v4
 
@@ -42,27 +50,36 @@ jobs:
       - run: npm ci
       - run: npm run build
 
-      # Until the Firebase site, the secret and the DNS record exist, say so and
-      # stop. A red build on every push would train everyone to ignore this
-      # workflow, and the build above is the half worth watching in the meantime:
-      # it proves the site still builds from the spec repo as that repo changes.
+      # Until the WIF vars are set, say so and stop. A red build on every push
+      # would train everyone to ignore this workflow, and the build above is the
+      # half worth watching in the meantime: it proves the site still builds from
+      # the spec repo as that repo changes.
       - name: Check for deploy credentials
         id: creds
         env:
-          ACCOUNT: ${{ secrets.FIREBASE_SERVICE_ACCOUNT }}
+          PROVIDER: ${{ vars.GCP_WIF_PROVIDER }}
+          SA: ${{ vars.GCP_DEPLOY_SA }}
         run: |
-          if [ -z "$ACCOUNT" ]; then
+          if [ -z "$PROVIDER" ] || [ -z "$SA" ]; then
             echo "configured=false" >> "$GITHUB_OUTPUT"
-            echo "::notice::Built, not deployed — FIREBASE_SERVICE_ACCOUNT is not set. See README, 'Before the first deploy'."
+            echo "::notice::Built, not deployed — GCP_WIF_PROVIDER or GCP_DEPLOY_SA not set. See README, 'Before the first deploy'."
           else
             echo "configured=true" >> "$GITHUB_OUTPUT"
           fi
 
-      - uses: FirebaseExtended/action-hosting-deploy@v0
+      - id: auth
         if: steps.creds.outputs.configured == 'true'
+        uses: google-github-actions/auth@v2
         with:
-          repoToken: ${{ secrets.GITHUB_TOKEN }}
-          firebaseServiceAccount: ${{ secrets.FIREBASE_SERVICE_ACCOUNT }}
-          projectId: embabel-me-prod
-          target: worlds
-          channelId: live
+          workload_identity_provider: ${{ vars.GCP_WIF_PROVIDER }}
+          service_account: ${{ vars.GCP_DEPLOY_SA }}
+
+      - name: Install firebase-tools
+        if: steps.creds.outputs.configured == 'true'
+        run: npm install -g firebase-tools
+
+      - name: Deploy
+        if: steps.creds.outputs.configured == 'true'
+        env:
+          GOOGLE_APPLICATION_CREDENTIALS: ${{ steps.auth.outputs.credentials_file_path }}
+        run: firebase deploy --only hosting:worlds --project embabel-me-prod --non-interactive
