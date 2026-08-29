@@ -3,21 +3,96 @@
  * The one command, and a copy button. It is the page's whole call to action, so
  * it is a component: every place it appears must show the same string, and the
  * string must be the one the site actually serves.
+ *
+ * Windows and Unix each get their own line — same installer flow, different
+ * shells. The tab that opens first is chosen by the visitor's platform (best
+ * effort — a Chromebook or a phone falls back to Unix, which is the wider
+ * audience), and either tab can be clicked to override. Copy always copies the
+ * currently visible line.
  */
 interface Props {
   id?: string
 }
 const { id } = Astro.props
-import { INSTALL_COMMAND } from '../site'
+import { INSTALL_COMMAND_UNIX, INSTALL_COMMAND_WINDOWS } from '../site'
 ---
 
-<div class="cmd" id={id}>
-  <code data-install-command>{INSTALL_COMMAND}</code>
-  <button type="button" data-copy>Copy</button>
+<div class="install" id={id}>
+  <div class="install-tabs" role="tablist" aria-label="Operating system">
+    <button type="button" role="tab" data-os="unix" aria-selected="true">Linux / macOS</button>
+    <button type="button" role="tab" data-os="windows" aria-selected="false">Windows</button>
+  </div>
+  <div class="cmd" data-os="unix">
+    <code data-install-command>{INSTALL_COMMAND_UNIX}</code>
+    <button type="button" data-copy>Copy</button>
+  </div>
+  <div class="cmd" data-os="windows" hidden>
+    <code data-install-command>{INSTALL_COMMAND_WINDOWS}</code>
+    <button type="button" data-copy>Copy</button>
+  </div>
 </div>
 
+<style>
+  .install-tabs {
+    display: flex;
+    gap: 4px;
+    margin-bottom: 6px;
+  }
+  .install-tabs button[role="tab"] {
+    background: transparent;
+    border: 1px solid var(--rule, #333);
+    color: var(--mid, #888);
+    padding: 4px 10px;
+    font: inherit;
+    font-size: 0.85em;
+    cursor: pointer;
+    border-radius: 4px 4px 0 0;
+    border-bottom: none;
+  }
+  .install-tabs button[role="tab"][aria-selected="true"] {
+    color: var(--fg, #eee);
+    background: var(--panel, #1a1a1a);
+    border-color: var(--rule, #333);
+  }
+  .install-tabs button[role="tab"]:hover {
+    color: var(--fg, #eee);
+  }
+</style>
+
 <script>
-  for (const button of document.querySelectorAll<HTMLButtonElement>('button[data-copy]')) {
+  /*
+   * Auto-select the tab matching the visitor's platform, then wire up manual
+   * override. Detection is best-effort — no user-agent sniffing surface is
+   * reliable across every browser, so we default to Unix (the wider audience)
+   * and only switch when Windows is clearly indicated.
+   */
+  function selectOS(os: string) {
+    for (const tab of document.querySelectorAll<HTMLButtonElement>('.install [role="tab"]')) {
+      tab.setAttribute('aria-selected', tab.dataset.os === os ? 'true' : 'false')
+    }
+    for (const cmd of document.querySelectorAll<HTMLElement>('.install .cmd')) {
+      cmd.hidden = cmd.dataset.os !== os
+    }
+  }
+
+  // Best-effort Windows detection. userAgentData is Chromium-only; userAgent is
+  // universal but easier to spoof. Both good enough for a landing page.
+  const nav = navigator as any
+  const uaPlatform: string = nav.userAgentData?.platform ?? navigator.platform ?? ''
+  const uaString = navigator.userAgent.toLowerCase()
+  const isWindows = /windows/i.test(uaPlatform) || (uaString.includes('windows') && !uaString.includes('mac'))
+  if (isWindows) selectOS('windows')
+
+  // Manual override.
+  for (const tab of document.querySelectorAll<HTMLButtonElement>('.install [role="tab"]')) {
+    tab.addEventListener('click', () => {
+      const os = tab.dataset.os
+      if (os) selectOS(os)
+    })
+  }
+
+  // Copy the currently visible command's text.
+  for (const button of document.querySelectorAll<HTMLButtonElement>('.install button[data-copy]')) {
     button.addEventListener('click', () => {
       const code = button.parentElement?.querySelector('[data-install-command]')?.textContent?.trim()
       if (!code) return
