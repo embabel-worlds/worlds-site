@@ -27,6 +27,10 @@ const path = Astro.url.pathname
    nav carries only the places to go next. */
 const NAV = [
   { href: '/guide/', label: 'Guide' },
+  /* A chapter of the guide with a seat of its own: the person who arrives asking
+     "can I read this from Excel / psql / a Slack channel" should not have to open the
+     guide to find out that the answer is yes. */
+  { href: '/guide/clients/', label: 'Clients' },
   { href: '/api/', label: 'API' },
   { href: '/cli/', label: 'CLI' },
   { href: '/spec/', label: 'Realm spec' },
