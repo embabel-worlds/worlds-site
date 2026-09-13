@@ -23,6 +23,11 @@ export const GUIDE_DOCS: GuideDoc[] = [
     blurb: 'Connecting Claude Code to your own appliance, what it can and cannot reach, and the loop that makes building fast.',
   },
   {
+    slug: 'clients',
+    title: 'Reading your world from other tools',
+    blurb: 'The doors: SQL for the tools a data team has, GraphQL for developers, OData for Excel, Power BI and Salesforce, and webhooks that post a view\'s changes where people look.',
+  },
+  {
     slug: 'realms',
     title: 'Making your own realm',
     blurb: 'Connecting a system nobody has connected yet — including the version where you describe it and an agent builds it.',
