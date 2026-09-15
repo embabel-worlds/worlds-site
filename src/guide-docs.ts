@@ -42,4 +42,9 @@ export const GUIDE_DOCS: GuideDoc[] = [
     title: 'What stays on your machine',
     blurb: 'The exhaustive list of what leaves, when and to whom — and how to check it from your own instance rather than trust it.',
   },
+  {
+    slug: 'troubleshooting',
+    title: 'When something is wrong',
+    blurb: 'The failures an appliance actually has — a console that will not open, a key that answers 401, a token naming the wrong account — each with what it means and the command that settles it.',
+  },
 ]

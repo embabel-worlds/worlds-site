@@ -48,7 +48,7 @@ const operations = published
     {published ? (
       <p>
         {operations} paths, generated from a running appliance{generated ? ` on ${generated}` : ''}.
-        Every endpoint is behind HTTP Basic against your own instance.
+        Every endpoint is against your own instance, with an API key minted in its console or HTTP Basic with your login.
       </p>
     ) : (
       <p>
