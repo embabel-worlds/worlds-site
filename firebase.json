@@ -5,6 +5,12 @@
       "public": "dist",
       "cleanUrls": true,
       "ignore": ["firebase.json", "**/.*", "**/node_modules/**"],
+      "rewrites": [
+        {
+          "source": "/track/install",
+          "function": { "functionId": "logInstallClick", "region": "us-central1" }
+        }
+      ],
       "headers": [
         {
           "source": "/install.sh",
@@ -14,6 +20,20 @@
           "source": "/install.ps1",
           "headers": [{ "key": "Content-Type", "value": "text/plain; charset=utf-8" }]
         }
+      ]
+    }
+  ],
+  "functions": [
+    {
+      "source": "functions",
+      "codebase": "default",
+      "runtime": "nodejs20",
+      "ignore": [
+        "node_modules",
+        ".git",
+        "firebase-debug.log",
+        "firebase-debug.*.log",
+        "*.local"
       ]
     }
   ]

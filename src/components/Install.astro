@@ -83,23 +83,45 @@ import { INSTALL_COMMAND_UNIX, INSTALL_COMMAND_WINDOWS } from '../site'
   const isWindows = /windows/i.test(uaPlatform) || (uaString.includes('windows') && !uaString.includes('mac'))
   if (isWindows) selectOS('windows')
 
-  // Manual override.
+  /*
+   * Fire-and-forget beacon to /track/install?os=... -- a Cloud Function
+   * (functions/index.js:logInstallClick) writes a structured log line, which
+   * a sink forwards to BigQuery for the "windows vs unix" report. sendBeacon
+   * is used rather than fetch() because it survives page unload without a
+   * keepalive: the OS-tab click and the Copy click are BOTH plausible last
+   * actions before the visitor leaves for their terminal. Never blocks; a
+   * failure never affects the install.
+   */
+  function trackInstallClick(os: string) {
+    try {
+      navigator.sendBeacon('/track/install?os=' + encodeURIComponent(os))
+    } catch { /* analytics must never break the page */ }
+  }
+
+  // Manual override -- and the click itself is a signal worth recording.
   for (const tab of document.querySelectorAll<HTMLButtonElement>('.install [role="tab"]')) {
     tab.addEventListener('click', () => {
       const os = tab.dataset.os
-      if (os) selectOS(os)
+      if (!os) return
+      selectOS(os)
+      trackInstallClick(os)
     })
   }
 
-  // Copy the currently visible command's text.
+  // Copy the currently visible command's text. Track by the OS of the tab
+  // it lives under -- the true intent signal, since Copy is what precedes
+  // an install more directly than a tab click.
   for (const button of document.querySelectorAll<HTMLButtonElement>('.install button[data-copy]')) {
     button.addEventListener('click', () => {
-      const code = button.parentElement?.querySelector('[data-install-command]')?.textContent?.trim()
+      const cmd = button.parentElement as HTMLElement | null
+      const code = cmd?.querySelector('[data-install-command]')?.textContent?.trim()
       if (!code) return
       navigator.clipboard.writeText(code).then(() => {
         button.textContent = 'Copied'
         setTimeout(() => { button.textContent = 'Copy' }, 1600)
       })
+      const os = cmd?.dataset.os
+      if (os) trackInstallClick(os)
     })
   }
 </script>

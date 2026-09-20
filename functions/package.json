@@ -1,0 +1,10 @@
+{
+  "name": "worlds-site-functions",
+  "description": "Cloud Functions for worlds-site: install-click beacon and any future server-side helpers.",
+  "engines": { "node": "20" },
+  "main": "index.js",
+  "private": true,
+  "dependencies": {
+    "firebase-functions": "^5.0.0"
+  }
+}
